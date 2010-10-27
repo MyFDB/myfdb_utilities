@@ -7,10 +7,9 @@
   gem build myfdb_utilities.gemspec
   gem install myfdb_utilities-x.x.x.gem
 
-== To run rake:
+== Run specs:
   
   git clone git@github.com:MyFDB/myfdb_utilities.git
   cd myfdb_utilities
   bundle install (gem install bundler if necessary)
-  gem build myfdb_utilities.gemspec
-  gem install myfdb_utilities-x.x.x.gem
+  rake
