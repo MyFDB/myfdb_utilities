@@ -120,7 +120,7 @@ module MyfdbUtilities
           escaped_image_paths   = images.collect { |image_path| image_path.gsub(/ /, '\ ') }
           joined_image_path     = escaped_image_paths.first.gsub(strip_extension_regex, '') + '-joined' + '.jpg'
 
-          %x(convert #{escaped_image_paths.join(' ')} +append #{joined_image_path})
+          %x(/opt/local/bin/convert #{escaped_image_paths.join(' ')} +append #{joined_image_path})
           
           images.each do |image|
             joined_image_name = File.basename(joined_image_path.gsub(/.(?i)JPE?G/, ''))
