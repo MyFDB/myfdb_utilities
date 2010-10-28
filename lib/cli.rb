@@ -3,7 +3,7 @@ require 'getopt/long'
 require 'myfdb_utilities'
 
 module MyfdbUtilities
-  module Command
+  module Cli
     
     class << self
       
@@ -16,11 +16,10 @@ module MyfdbUtilities
            ["--password", "-p", Getopt::REQUIRED],
            ["--user", "-u", Getopt::REQUIRED],
            ["--host", "-h", Getopt::REQUIRED],
-           ["--ramped_workers", "-r", Getopt::REQUIRED],
-           ["--return_workers", "-w", Getopt::REQUIRED]
+           ["--workers_start", "-r", Getopt::OPTIONAL],
+           ["--workers_finished", "-w", Getopt::OPTIONAL]
         )
                 
-
         if errors = MyfdbUtilities::IssuesUploader.upload(args)
           puts "#{errors}" unless errors.empty?
         end

@@ -7,4 +7,4 @@ require 'cli'
 
 command = ARGV.shift.strip rescue 'help'
 
-MyfdbUtilities::Command.run(command)
+MyfdbUtilities::Cli.run(command)
