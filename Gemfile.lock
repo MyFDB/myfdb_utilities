@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    myfdb_utilities (0.0.3)
+    myfdb_utilities (0.0.2)
       getopt
       heroku
       multipart-post
