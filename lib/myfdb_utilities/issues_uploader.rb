@@ -116,11 +116,16 @@ module MyfdbUtilities
         end
 
         image_groups.each_value do |images|
-          joined_image_file = File.join(path, File.basename(images.first).gsub(/-[a-z]-[0-9].(?i)JPE?G/, '') + '-joined' + '.jpg')
-          system "convert #{images.join(' ')} +append #{joined_image_file}"
+          strip_extension_regex = /-[a-z]-[0-9].(?i)JPE?G/
+          escaped_image_paths   = images.collect { |image_path| image_path.gsub(/ /, '\ ') }
+          joined_image_path     = escaped_image_paths.first.gsub(strip_extension_regex, '') + '-joined' + '.jpg'
+
+          %x(convert #{escaped_image_paths.join(' ')} +append #{joined_image_path})
+          
           images.each do |image|
-            File.open(File.join(path, File.basename(image).gsub(/-[a-z]-[0-9].(?i)JPE?G/, '')) + '.txt', 'w') do |file|
-              file.puts "Merged into #{joined_image_file}"
+            joined_image_name = File.basename(joined_image_path.gsub(/.(?i)JPE?G/, ''))
+            File.open(File.join(path, File.basename(image).gsub(strip_extension_regex, '')) + "-merged_with-#{joined_image_name}", 'w') do |file|
+              file.puts "Merged into #{joined_image_name}.jpg"
             end 
             FileUtils.rm_rf image
           end
