@@ -73,7 +73,7 @@ module MyfdbUtilities
               end
             end
           
-            sleep 300
+            sleep 60
             set_workers args['workers_finished'] || 1
           end
         end
