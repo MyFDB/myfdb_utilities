@@ -42,10 +42,12 @@ module MyfdbUtilities
             end
           end
           
+          join_images(issue_directory)
+          
           images = Dir.glob(File.join(issue_directory, '*.{jpeg,JPEG,jpg,JPG}'))
         
-          if !images.empty?    
-            set_workers args['ramped_workers'] || 3 if worker_count <= 1
+          if !images.empty?
+            set_workers args['workers_start'] || 3 if worker_count <= 1
           
             images.each do |image|
               begin
@@ -72,7 +74,7 @@ module MyfdbUtilities
             end
           
             sleep 300
-            set_workers args['workers'] || 1
+            set_workers args['workers_finished'] || 1
           end
         end
       else
@@ -99,6 +101,31 @@ module MyfdbUtilities
   
     def heroku(user=nil, password=nil)
       @heroku ||= Heroku::Client.new(user, password)
+    end
+    
+    def join_images(path, image_groups={})
+      image_files = Dir.glob(File.join(path, '*-[a-z]-[0-9].{jpeg,JPEG,jpg,JPG}'))
+      
+      if !image_files.empty?
+        keys = image_files.collect { |img|  File.basename(img) =~ /-([a-z])-[0-9]/ ; $1}.uniq
+        keys.each { |key| image_groups[key] = [] }
+
+        image_files.each do |image|
+          File.basename(image) =~ /-([a-z])-([0-9])/
+          image_groups[$1] << image
+        end
+
+        image_groups.each_value do |images|
+          joined_image_file = File.join(path, File.basename(images.first).gsub(/-[a-z]-[0-9].(?i)JPE?G/, '') + '-joined' + '.jpg')
+          system "convert #{images.join(' ')} +append #{joined_image_file}"
+          images.each do |image|
+            File.open(File.join(path, File.basename(image).gsub(/-[a-z]-[0-9].(?i)JPE?G/, '')) + '.txt', 'w') do |file|
+              file.puts "Merged into #{joined_image_file}"
+            end 
+            system "rm #{image}"
+          end
+        end
+      end
     end
   
   end
