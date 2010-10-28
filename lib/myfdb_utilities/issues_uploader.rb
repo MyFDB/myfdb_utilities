@@ -122,7 +122,7 @@ module MyfdbUtilities
             File.open(File.join(path, File.basename(image).gsub(/-[a-z]-[0-9].(?i)JPE?G/, '')) + '.txt', 'w') do |file|
               file.puts "Merged into #{joined_image_file}"
             end 
-            system "rm #{image}"
+            FileUtils.rm_rf image
           end
         end
       end
