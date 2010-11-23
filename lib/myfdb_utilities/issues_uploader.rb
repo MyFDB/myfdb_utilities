@@ -104,30 +104,30 @@ module MyfdbUtilities
     end
     
     def join_images(path, image_groups={})
-      image_files = Dir.glob(File.join(path, '*-[a-z]-[0-9].{jpeg,JPEG,jpg,JPG}'))
+      image_files = Dir.glob(File.join(path, '*-[a-z].{jpeg,JPEG,jpg,JPG}'))
       
       if !image_files.empty?
-        keys = image_files.collect { |img|  File.basename(img) =~ /-([a-z])-[0-9]/ ; $1}.uniq
+        keys = image_files.collect { |img|  File.basename(img) =~ /-([a-z])/ ; $1 }.uniq
         keys.each { |key| image_groups[key] = [] }
 
         image_files.each do |image|
-          File.basename(image) =~ /-([a-z])-([0-9])/
+          File.basename(image) =~ /-([a-z])/
           image_groups[$1] << image
         end
 
         image_groups.each_value do |images|
-          strip_extension_regex = /-[a-z]-[0-9].(?i)JPE?G/
+          strip_extension_regex = /-[a-z].(?i)JPE?G/
           escaped_image_paths   = images.collect { |image_path| image_path.gsub(/ /, '\ ') }
           joined_image_path     = escaped_image_paths.first.gsub(strip_extension_regex, '') + '-joined' + '.jpg'
 
-          %x(/opt/local/bin/convert #{escaped_image_paths.join(' ')} +append #{joined_image_path})
-          
-          images.each do |image|
-            joined_image_name = File.basename(joined_image_path.gsub(/.(?i)JPE?G/, ''))
-            File.open(File.join(path, File.basename(image).gsub(strip_extension_regex, '')) + "-merged_with-#{joined_image_name}", 'w') do |file|
-              file.puts "Merged into #{joined_image_name}.jpg"
-            end 
-            FileUtils.rm_rf image
+          if system "/opt/local/bin/convert #{escaped_image_paths.join(' ')} +append #{joined_image_path}"
+            images.each do |image|
+              joined_image_name = File.basename(joined_image_path.gsub(/.(?i)JPE?G/, ''))
+              File.open(File.join(path, File.basename(image).gsub(strip_extension_regex, '')) + "-merged_with-#{joined_image_name}", 'w') do |file|
+                file.puts "Merged into #{joined_image_name}.jpg"
+              end 
+              FileUtils.rm_rf image
+            end
           end
         end
       end

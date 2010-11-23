@@ -13,3 +13,7 @@
   cd myfdb_utilities
   bundle install (gem install bundler if necessary)
   rake
+  
+== Issues Uploader Requirements
+
+Must have ImageMagick installed via macports and the 'convert' executable located here: /opt/local/bin/
