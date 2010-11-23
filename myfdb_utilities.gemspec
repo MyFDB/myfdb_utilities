@@ -23,7 +23,6 @@ Gem::Specification.new do |s|
   
   s.add_dependency 'multipart-post'
   s.add_dependency 'heroku'
-  s.add_dependency 'getopt'
 
   s.files        = `git ls-files`.split("\n")
   s.executables  = 'myfdb'
