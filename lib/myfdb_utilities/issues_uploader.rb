@@ -44,38 +44,38 @@ module MyfdbUtilities
           
           join_images(issue_directory)
           
-          #images = Dir.glob(File.join(issue_directory, '*.{jpeg,JPEG,jpg,JPG}'))
-          #
-          #if !images.empty?
-          #  set_workers args['workers_start'] || 3 if worker_count <= 1
-          #
-          #  images.each do |image|
-          #    begin
-          #      uri       = URI.parse "http://#{args['host']}/upload/tear_sheets"
-          #      upload_io = UploadIO.new image, 'image/jpeg'
-          #      multipart = Net::HTTP::Post::Multipart.new(uri.path, 'issue_id' => issue_id, 'tear_sheet[image]' => upload_io)
-          #    
-          #      response  = Net::HTTP.start(uri.host, uri.port) do |http|
-          #        multipart.basic_auth UPLOAD_USERNAME, UPLOAD_PASSWORD
-          #        http.request multipart
-          #      end
-          #    
-          #      if response.code == '200'
-          #        FileUtils.rm_rf image
-          #      elsif response.code == '422'
-          #        error_report << "Invalid image, response: #{response.body}"
-          #      else
-          #        error_report << "Unknown response, issue: #{issue_id.chomp}, image: #{image}, response: #{response.body}, code: #{response.code}"
-          #      end
-          #  
-          #    rescue => error
-          #      error_report << "Error creating tear sheet '#{image}', error: #{error.class}, message: #{error.message}"
-          #    end
-          #  end
-          #
-          #  sleep 60
-          #  set_workers args['workers_finished'] || 1
-          #end
+          images = Dir.glob(File.join(issue_directory, '*.{jpeg,JPEG,jpg,JPG}'))
+          
+          if !images.empty?
+            set_workers args['workers_start'] || 3 if worker_count <= 1
+          
+            images.each do |image|
+              begin
+                uri       = URI.parse "http://#{args['host']}/upload/tear_sheets"
+                upload_io = UploadIO.new image, 'image/jpeg'
+                multipart = Net::HTTP::Post::Multipart.new(uri.path, 'issue_id' => issue_id, 'tear_sheet[image]' => upload_io)
+              
+                response  = Net::HTTP.start(uri.host, uri.port) do |http|
+                  multipart.basic_auth UPLOAD_USERNAME, UPLOAD_PASSWORD
+                  http.request multipart
+                end
+              
+                if response.code == '200'
+                  FileUtils.rm_rf image
+                elsif response.code == '422'
+                  error_report << "Invalid image, response: #{response.body}"
+                else
+                  error_report << "Unknown response, issue: #{issue_id.chomp}, image: #{image}, response: #{response.body}, code: #{response.code}"
+                end
+            
+              rescue => error
+                error_report << "Error creating tear sheet '#{image}', error: #{error.class}, message: #{error.message}"
+              end
+            end
+          
+            sleep 60
+            set_workers args['workers_finished'] || 1
+          end
         end
       else
         raise StandardError, "#{working_directory} does not exist. Please create this directory and continue."
