@@ -12,7 +12,7 @@ module MyfdbUtilities
     def upload(args)
       error_report = []
     
-      heroku(args['user'], args['password'])
+      heroku_client(args['user'], args['password'])
       app_name(args['host'].to_s.split(".")[0])
       working_directory = "/Users/Shared/magazines/#{app_name}"
     
@@ -44,38 +44,38 @@ module MyfdbUtilities
           
           join_images(issue_directory)
           
-          images = Dir.glob(File.join(issue_directory, '*.{jpeg,JPEG,jpg,JPG}'))
-        
-          if !images.empty?
-            set_workers args['workers_start'] || 3 if worker_count <= 1
-          
-            images.each do |image|
-              begin
-                uri       = URI.parse "http://#{args['host']}/upload/tear_sheets"
-                upload_io = UploadIO.new image, 'image/jpeg'
-                multipart = Net::HTTP::Post::Multipart.new(uri.path, 'issue_id' => issue_id, 'tear_sheet[image]' => upload_io)
-              
-                response  = Net::HTTP.start(uri.host, uri.port) do |http|
-                  multipart.basic_auth UPLOAD_USERNAME, UPLOAD_PASSWORD
-                  http.request multipart
-                end
-              
-                if response.code == '200'
-                  FileUtils.rm_rf image
-                elsif response.code == '422'
-                  error_report << "Invalid image, response: #{response.body}"
-                else
-                  error_report << "Unknown response, issue: #{issue_id.chomp}, image: #{image}, response: #{response.body}, code: #{response.code}"
-                end
-            
-              rescue => error
-                error_report << "Error creating tear sheet '#{image}', error: #{error.class}, message: #{error.message}"
-              end
-            end
-          
-            sleep 60
-            set_workers args['workers_finished'] || 1
-          end
+          #images = Dir.glob(File.join(issue_directory, '*.{jpeg,JPEG,jpg,JPG}'))
+          #
+          #if !images.empty?
+          #  set_workers args['workers_start'] || 3 if worker_count <= 1
+          #
+          #  images.each do |image|
+          #    begin
+          #      uri       = URI.parse "http://#{args['host']}/upload/tear_sheets"
+          #      upload_io = UploadIO.new image, 'image/jpeg'
+          #      multipart = Net::HTTP::Post::Multipart.new(uri.path, 'issue_id' => issue_id, 'tear_sheet[image]' => upload_io)
+          #    
+          #      response  = Net::HTTP.start(uri.host, uri.port) do |http|
+          #        multipart.basic_auth UPLOAD_USERNAME, UPLOAD_PASSWORD
+          #        http.request multipart
+          #      end
+          #    
+          #      if response.code == '200'
+          #        FileUtils.rm_rf image
+          #      elsif response.code == '422'
+          #        error_report << "Invalid image, response: #{response.body}"
+          #      else
+          #        error_report << "Unknown response, issue: #{issue_id.chomp}, image: #{image}, response: #{response.body}, code: #{response.code}"
+          #      end
+          #  
+          #    rescue => error
+          #      error_report << "Error creating tear sheet '#{image}', error: #{error.class}, message: #{error.message}"
+          #    end
+          #  end
+          #
+          #  sleep 60
+          #  set_workers args['workers_finished'] || 1
+          #end
         end
       else
         raise StandardError, "#{working_directory} does not exist. Please create this directory and continue."
@@ -85,12 +85,12 @@ module MyfdbUtilities
     end
   
     def set_workers(count)
-      current = heroku.set_workers(app_name, count)
+      current = heroku_client.set_workers(app_name, count)
       puts "#{app_name} now running #{current} workers"
     end
   
     def worker_count
-      info = heroku.info(app_name)
+      info = heroku_client.info(app_name)
       info[:workers].to_i
     end
   
@@ -99,32 +99,32 @@ module MyfdbUtilities
       @app = name
     end
   
-    def heroku(user=nil, password=nil)
-      @heroku ||= Heroku::Client.new(user, password)
+    def heroku_client(user=nil, password=nil)
+      @heroku_client ||= Heroku::Client.new(user, password)
     end
     
     def join_images(path, image_groups={})
-      image_files = Dir.glob(File.join(path, '*-[a-z].{jpeg,JPEG,jpg,JPG}'))
+      image_files = Dir.glob(File.join(path, '*-[a-z]*\.{jpeg,JPEG,jpg,JPG}'))
       
       if !image_files.empty?
-        keys = image_files.collect { |img|  File.basename(img) =~ /-([a-z])/ ; $1 }.uniq
+        keys = image_files.collect { |img|  File.basename(img) =~ /-([a-z]*)/ ; $1 }.uniq
         keys.each { |key| image_groups[key] = [] }
 
         image_files.each do |image|
-          File.basename(image) =~ /-([a-z])/
+          File.basename(image) =~ /-([a-z]*)/
           image_groups[$1] << image
         end
 
         image_groups.each_value do |images|
-          strip_extension_regex = /-[a-z].(?i)JPE?G/
-          escaped_image_paths   = images.collect { |image_path| image_path.gsub(/ /, '\ ') }
-          joined_image_path     = escaped_image_paths.first.gsub(strip_extension_regex, '') + '-joined' + '.jpg'
+          strip_extension = /-[a-z]*\.(?i)JPE?G/
+          escaped_paths   = images.collect { |path| path.gsub(/ /, '\ ') }
+          joined_path     = escaped_paths.first.gsub(strip_extension, '') + '-joined' + '.jpg'
 
-          if system "/opt/local/bin/convert #{escaped_image_paths.join(' ')} +append #{joined_image_path}"
+          if system "/opt/local/bin/convert #{escaped_paths.join(' ')} +append #{joined_path}"
             images.each do |image|
-              joined_image_name = File.basename(joined_image_path.gsub(/.(?i)JPE?G/, ''))
-              File.open(File.join(path, File.basename(image).gsub(strip_extension_regex, '')) + "-merged_with-#{joined_image_name}", 'w') do |file|
-                file.puts "Merged into #{joined_image_name}.jpg"
+              joined_name = File.basename(joined_path.gsub(/.(?i)JPE?G/, ''))
+              File.open(File.join(path, File.basename(image).gsub(strip_extension, '')) + "-merged_with-#{joined_name}", 'w') do |file|
+                file.puts "Merged into #{joined_name}.jpg"
               end 
               FileUtils.rm_rf image
             end
