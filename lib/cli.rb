@@ -1,5 +1,5 @@
 require 'rubygems'
-require 'getopt/long'
+require 'core_ext/getopt/long'
 require 'myfdb_utilities'
 
 module MyfdbUtilities
