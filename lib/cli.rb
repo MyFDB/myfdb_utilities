@@ -13,11 +13,7 @@ module MyfdbUtilities
       
       def upload_issues
         args = Getopt::Long.getopts(
-           ["--password", "-p", Getopt::REQUIRED],
-           ["--user", "-u", Getopt::REQUIRED],
            ["--host", "-h", Getopt::REQUIRED],
-           ["--workers_start", "-r", Getopt::OPTIONAL],
-           ["--workers_finished", "-w", Getopt::OPTIONAL]
         )
                 
         if errors = MyfdbUtilities::IssuesUploader.upload(args)

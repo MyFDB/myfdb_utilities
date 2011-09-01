@@ -12,9 +12,7 @@ module MyfdbUtilities
     def upload(args)
       error_report = []
     
-      heroku_client(args['user'], args['password'])
-      app_name(args['host'].to_s.split(".")[0])
-      working_directory = "/Users/Shared/magazines/#{app_name}"
+      working_directory = "/Users/Shared/magazines/#{args['host'].to_s.split(".")[0]}"
     
       if File.exists? working_directory
         Dir.glob("#{working_directory}/*") do |issue_directory|
@@ -47,8 +45,6 @@ module MyfdbUtilities
           images = Dir.glob(File.join(issue_directory, '*.{jpeg,JPEG,jpg,JPG}'))
           
           if !images.empty?
-            set_workers args['workers_start'] || 3 if worker_count <= 1
-          
             images.each do |image|
               begin
                 uri       = URI.parse "http://#{args['host']}/upload/tear_sheets"
@@ -73,8 +69,6 @@ module MyfdbUtilities
               end
             end
           
-            sleep 60
-            set_workers args['workers_finished'] || 1
           end
         end
       else
@@ -82,25 +76,6 @@ module MyfdbUtilities
       end
     
       error_report.join("\n")
-    end
-  
-    def set_workers(count)
-      current = heroku_client.set_workers(app_name, count)
-      puts "#{app_name} now running #{current} workers"
-    end
-  
-    def worker_count
-      info = heroku_client.info(app_name)
-      info[:workers].to_i
-    end
-  
-    def app_name(name=nil)
-      return @app unless name
-      @app = name
-    end
-  
-    def heroku_client(user=nil, password=nil)
-      @heroku_client ||= Heroku::Client.new(user, password)
     end
     
     def join_images(path, image_groups={})
