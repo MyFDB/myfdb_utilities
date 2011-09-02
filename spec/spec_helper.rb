@@ -1,17 +1,10 @@
-$:.unshift File.expand_path('..', __FILE__)
-$:.unshift File.expand_path('../../lib', __FILE__)
-
+# encoding: utf-8
 require 'rubygems'
-require 'bundler'
-Bundler.setup
+require 'bundler/setup'
 
-require 'spec'
 require 'fakeweb'
-require 'myfdb_utilities'
-
 
 FakeWeb.allow_net_connect = false
-
-Spec::Runner.configure do |config|
-  config.mock_with :mocha
+RSpec.configure do |c|
+  c.mock_with :mocha
 end
