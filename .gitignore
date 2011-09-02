@@ -20,5 +20,6 @@ pkg
 
 ## PROJECT::SPECIFIC
 .bundle/*
+Gemfile.lock
 
 *.gem
