@@ -16,4 +16,7 @@
   
 == Issues Uploader Requirements
 
-Must have ImageMagick installed via macports and the 'convert' executable located here: /opt/local/bin/
+Must have ImageMagick installed
+
+myfdb process_magazines --host myfdb-production.herokuapp.com -u $UPLOADER_USERNAME -p $UPLOADER_PASSWORD
+myfdb process_magazines --host myfdb-staging.herokuapp.com -u $UPLOADER_USERNAME -p $UPLOADER_PASSWORD

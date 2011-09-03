@@ -18,8 +18,7 @@ module Myfdb
       magazines = self.new(args)
 
       magazines.issue_directories.each do |directory|
-        images = Dir.glob(File.join directory, '*.{jpeg,JPEG,jpg,JPG}')
-        if !images.empty?
+        unless Dir.glob(File.join directory, '*.{jpeg,JPEG,jpg,JPG}').empty?
           id_file = File.join directory, 'issue_id'
       
           issue_id = if File.exists?(id_file)

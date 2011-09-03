@@ -28,12 +28,12 @@ command :process_magazines do |c|
         Dir.mkdir options.directory
         puts "Created directory #{options.directory}"
       end
-
+sleep 100
       Myfdb::Magazines.process(options)
     else
       puts 'missing required argument(s):'
       errors.each { |error| puts error }
-    end
+    end if %x(ps ux | awk '/#{options.host}/ && !/#{Process.pid}/ && !/awk/ {print $2}').empty?
   end
 end
 
