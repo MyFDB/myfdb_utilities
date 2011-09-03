@@ -18,5 +18,15 @@
 
 Must have ImageMagick installed
 
-myfdb process_magazines --host myfdb-production.herokuapp.com -u $UPLOADER_USERNAME -p $UPLOADER_PASSWORD
-myfdb process_magazines --host myfdb-staging.herokuapp.com -u $UPLOADER_USERNAME -p $UPLOADER_PASSWORD
+If you set the following env variables: 
+
+  ENV['MYFDB_PROCESS_MAG_USERNAME']
+  ENV['MYFDB_PROCESS_MAG_PASSWORD']
+
+password and username are not required and you can do the following in a cron script.
+
+  myfdb process_magazines --host myfdb-production.herokuapp.com
+
+Otherwise use the following:
+
+  myfdb process_magazines --host myfdb-production.herokuapp.com -u <username> -p <password>

@@ -22,7 +22,10 @@ command :process_magazines do |c|
   c.action do |args, options|
     errors = parse_options(options)
     if errors.empty?
-      options.default :directory => set_directory(options.host)
+      options.default \
+        :directory => set_directory(options.host),
+        :username => ENV['MYFDB_PROCESS_MAG_USERNAME'],
+        :password => ENV['MYFDB_PROCESS_MAG_PASSWORD']
 
       if !File.exists? options.directory
         Dir.mkdir options.directory
@@ -42,8 +45,8 @@ def set_directory(host)
 end
 
 def parse_options(opts, errors=[])
-  errors << '-u --username USERNAME' unless opts.username
-  errors << '-p --password PASSWORD' unless opts.password
+  errors << '-u --username USERNAME' unless opts.username || ENV['MYFDB_PROCESS_MAG_USERNAME']
+  errors << '-p --password PASSWORD' unless opts.password || ENV['MYFDB_PROCESS_MAG_PASSWORD']
   errors << '--host HOSTNAME, Hostname of the server' unless opts.host
   errors
 end
