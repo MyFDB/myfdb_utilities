@@ -22,8 +22,10 @@ module Myfdb
     end
 
     def process_images
-      join_images
-      upload_images
+      if id
+        join_images
+        upload_images
+      end
     end
 
     private
@@ -31,7 +33,8 @@ module Myfdb
     def retrieve_or_create_issue_id
       File.read File.join(directory, 'issue_id')
     rescue Errno::ENOENT
-      errors << create_issue(directory)
+      response = create_issue(directory)
+      response.is_a?(Integer) ? response : errors << response 
     end
 
     def create_issue(dir)
@@ -39,16 +42,14 @@ module Myfdb
       if response.code == '200'
         issue_id = response.body
         File.open(File.join(dir, 'issue_id'), 'w') do |f|
-          f.puts issue_id
+          f.print issue_id
         end
-        issue_id
+        issue_id.to_i
       else
-        errors << "Unknown response, body: #{response.body}, code: #{response.code}"
-        nil
+        errors << "Unknown response, body: #{response.body}, code: #{response.code}" and return nil
       end
     rescue => error
-      errors << "Error creating issue, error: #{error.class}, message: #{error.message}"
-      nil
+      errors << "Error creating issue, error: #{error.class}, message: #{error.message}" and return nil
     end
 
   end

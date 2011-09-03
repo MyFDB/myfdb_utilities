@@ -1,6 +1,4 @@
-require 'net/http/post/multipart'
 require 'fileutils'
-require 'rmagick'
 require 'myfdb/issue'
 
 module Myfdb
