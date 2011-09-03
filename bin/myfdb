@@ -28,7 +28,7 @@ command :process_magazines do |c|
         Dir.mkdir options.directory
         puts "Created directory #{options.directory}"
       end
-sleep 100
+
       Myfdb::Magazines.process(options)
     else
       puts 'missing required argument(s):'
