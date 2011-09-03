@@ -1,3 +1,3 @@
-module MyfdbUtilities
-  VERSION = "0.0.6"
+module Myfdb
+  VERSION = "0.0.7"
 end

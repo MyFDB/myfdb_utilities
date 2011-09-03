@@ -6,7 +6,7 @@ require 'version'
 
 Gem::Specification.new do |s|
   s.name        = "myfdb_utilities"
-  s.version     = MyfdbUtilities::VERSION
+  s.version     = Myfdb::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ['Larry Sprock']
   s.email       = ['developers@myfdb.com']
@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rake'
   
   s.add_dependency 'multipart-post'
+  s.add_dependency 'rmagick'
 
   s.files        = `git ls-files`.split("\n")
   s.executables  = 'myfdb'

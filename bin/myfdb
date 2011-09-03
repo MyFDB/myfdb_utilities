@@ -3,8 +3,47 @@
 lib = File.expand_path(File.dirname(__FILE__) + '/../lib')
 $LOAD_PATH.unshift(lib) if File.directory?(lib) && !$LOAD_PATH.include?(lib)
 
-require 'cli'
+require 'myfdb'
+require 'version'
+require 'commander/import'
 
-command = ARGV.shift.strip rescue 'help'
+program :version, Myfdb::VERSION
+program :description, 'Misc tasks related to myfdb.com'
 
-MyfdbUtilities::Cli.run(command)
+command :process_magazines do |c|
+  c.syntax = 'myfdb process_magazines [options]'
+  c.description = 'Porcesses magazines by creates issues and uploading tear_sheet images'
+
+  c.option '--host HOSTNAME', 'Hostname of the server'
+  c.option '-d', '--base_directory PATH_TO_FOLDER', 'Default HOME'
+  c.option '-u', '--username USERNAME', 'Basic authentication username'
+  c.option '-p', '--password PASSWORD', 'Basic authentication password'
+
+  c.action do |args, options|
+    errors = parse_options(options)
+    if errors.empty?
+      options.default :directory => set_directory(options.host)
+
+      if !File.exists? options.directory
+        Dir.mkdir options.directory
+        puts "Created directory #{options.directory}"
+      end
+
+      Myfdb::Magazines.process(options)
+    else
+      puts 'missing required argument(s):'
+      errors.each { |error| puts error }
+    end
+  end
+end
+
+def set_directory(host)
+  File.join ENV['HOME'], 'Documents', host.split(".").first
+end
+
+def parse_options(opts, errors=[])
+  errors << '-u --username USERNAME' unless opts.username
+  errors << '-p --password PASSWORD' unless opts.password
+  errors << '--host HOSTNAME, Hostname of the server' unless opts.host
+  errors
+end
