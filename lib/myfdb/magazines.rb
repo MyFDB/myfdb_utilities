@@ -10,7 +10,7 @@ module Myfdb
 
       Dir.glob("#{options.directory}/*") do |directory|
         issue = Myfdb::Issue.new(directory, uri)
-        issue.process_images if issue.images?
+        issue.save 
         issues << issue
       end
 
