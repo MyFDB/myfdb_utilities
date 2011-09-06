@@ -41,7 +41,6 @@ module Processors
 
     def group_images_to_join(join_groups={})
       images = Dir.glob(File.join directory, '*-[a-z]*\.{jpeg,JPEG,jpg,JPG}')
-      puts images.inspect
       ('a'..'z').each do |letter|
         images.each do |image|
           (1..9).each do |n|

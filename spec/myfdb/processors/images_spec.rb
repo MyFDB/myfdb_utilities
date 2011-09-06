@@ -86,12 +86,13 @@ describe Processors::Images do
       }
     }
 
-    before do
+    it 'groups images appended by alphabet into a hash' do
       create_join_images
+      test_processor.join_groups.should eql(expected) 
     end
 
-    it 'groups images appended by alphabet into a hash' do
-      test_processor.join_groups.should eql(expected) 
+    it 'returns an empty hash if no images exist' do
+      test_processor.join_groups.should eql({})
     end
   end
 end
