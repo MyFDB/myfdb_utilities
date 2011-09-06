@@ -4,7 +4,7 @@ require 'rmagick'
 
 module Processors
   module Images
-    
+
     def self.included(base)
       base.class_eval do
         attr_reader :directory, :id, :uri
@@ -14,7 +14,7 @@ module Processors
         end
       end
     end
-  
+
     def images?
       !images.empty?
     end
@@ -66,12 +66,12 @@ module Processors
           uri_path  = '/upload/tear_sheets'
           upload_io = UploadIO.new(image, 'image/jpeg')
           multipart = Net::HTTP::Post::Multipart.new(uri_path, 'issue_id' => id.to_s, 'tear_sheet[image]' => upload_io)
-        
+
           response = Net::HTTP.start(uri.host, uri.port) do |http|
             multipart.basic_auth uri.user, uri.password
             http.request multipart
           end
-              
+
           if error = parse_response(response)
             errors << error
           else
