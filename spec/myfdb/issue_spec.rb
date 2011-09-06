@@ -1,24 +1,7 @@
 require 'spec_helper'
+require 'myfdb/issue'
 
-HOST = 'localhost:3000'
-FIXTURES = File.expand_path(File.dirname(__FILE__) + '/fixtures/magazines')
-
-class Issue
-  
-  attr_reader :id, :name, :untitled_tear_sheets
-  
-  def initialize
-    @id = 2
-    @name = '10 Men'
-    @untitled_tear_sheets = []
-  end
-  
-end
-
-class TearSheet
-end
-
-describe MyfdbUtilities::IssuesUploader do
+describe Myfdb::Issue do
   describe '.upload' do
     before(:each) do
       @from_directory = FIXTURES
