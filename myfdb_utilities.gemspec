@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
   
   s.add_dependency 'multipart-post'
   s.add_dependency 'rmagick'
+  s.add_dependency 'commander', ["4.0.5"]
 
   s.files        = `git ls-files`.split("\n")
   s.executables  = 'myfdb'
