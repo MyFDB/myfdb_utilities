@@ -20,33 +20,43 @@ command :process_magazines do |c|
   c.option '-p', '--password PASSWORD', 'Basic authentication password'
 
   c.action do |args, options|
-    errors = parse_options(options)
-    if errors.empty?
+    parse_options(options)
+    if %x(ps ux | awk '/#{options.host}/ && !/#{Process.ppid}/ && !/#{Process.pid}/ && !/awk/ {print $2}').empty?
+    sleep 1000
       options.default \
         :directory => set_directory(options.host),
         :username => ENV['MYFDB_PROCESS_MAG_USERNAME'],
         :password => ENV['MYFDB_PROCESS_MAG_PASSWORD']
 
-      if !File.exists? options.directory
-        Dir.mkdir options.directory
-        puts "Created directory #{options.directory}"
-      end
+      create_directory(options.directory)
 
       Myfdb::Magazines.process(options)
-    else
-      puts 'missing required argument(s):'
-      errors.each { |error| puts error }
-    end if %x(ps ux | awk '/#{options.host}/ && !/#{Process.pid}/ && !/awk/ {print $2}').empty?
+    end
   end
 end
 
 def set_directory(host)
-  File.join ENV['HOME'], 'Documents', host.split(".").first
+  File.join home_directory, 'Documents', host.split(".").first
+end
+
+def create_directory?(directory)
+  unless File.exists? directory
+    Dir.mkdir directory
+    puts "Created directory #{directory}"
+  end
 end
 
 def parse_options(opts, errors=[])
   errors << '-u --username USERNAME' unless opts.username || ENV['MYFDB_PROCESS_MAG_USERNAME']
   errors << '-p --password PASSWORD' unless opts.password || ENV['MYFDB_PROCESS_MAG_PASSWORD']
   errors << '--host HOSTNAME, Hostname of the server' unless opts.host
-  errors
+  raise errors.join(', ') unless errors.empty?
+end
+
+def home_directory
+  running_on_windows? ? ENV['USERPROFILE'] : ENV['HOME']
+end
+
+def running_on_windows?
+  RUBY_PLATFORM =~ /mswin32|mingw32/
 end
