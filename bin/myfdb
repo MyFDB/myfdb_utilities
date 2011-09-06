@@ -27,7 +27,7 @@ command :process_magazines do |c|
         :username => ENV['MYFDB_PROCESS_MAG_USERNAME'],
         :password => ENV['MYFDB_PROCESS_MAG_PASSWORD']
 
-      create_directory(options.directory)
+      create_directory?(options.directory)
 
       Myfdb::Magazines.process(options)
     end
