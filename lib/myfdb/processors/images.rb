@@ -6,7 +6,11 @@ module Processors
     
     def self.included(base)
       base.class_eval do
-        attr_reader :directory, :id
+        attr_reader :directory, :id, :uri
+
+        def errors
+          @errors ||= []
+        end
       end
     end
   
@@ -73,7 +77,7 @@ module Processors
             delete(image)
           end
         rescue => error
-          errors << "Error creating tear sheet '#{image}', error: #{error.class}, message: #{error.message}"
+          errors << "Error creating tear sheet '#{File.basename(image)}', error: #{error.class}, message: #{error.message}"
         end
       end
     end

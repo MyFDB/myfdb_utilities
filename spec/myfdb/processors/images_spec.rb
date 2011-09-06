@@ -6,13 +6,13 @@ class TestImageProcessor
 
   def initialize(directory, uri)
     @directory = directory
-    @uri = uri
+    @uri = URI.parse uri
     @id = 2
   end
 end
 
 describe Processors::Images do
-  let(:test_processor) { TestImageProcessor.new directory, '/fake/images' }
+  let(:test_processor) { TestImageProcessor.new directory, 'http://me:123@test.com' }
 
   after do
     delete_images
@@ -57,36 +57,18 @@ describe Processors::Images do
   end
 
   context '#join_groups' do
-    let(:expected) { 
+    let(:expected) do 
       {
-        "a" => [
-          "/Users/lar/Sites/myfdb_utilities/spec/fixtures/magazines/0_test_0-a.jpg",
-          "/Users/lar/Sites/myfdb_utilities/spec/fixtures/magazines/0_test_1-a.jpg"
-        ],
-        
-        "aa" => [
-          "/Users/lar/Sites/myfdb_utilities/spec/fixtures/magazines/1_test_0-aa.jpg",
-          "/Users/lar/Sites/myfdb_utilities/spec/fixtures/magazines/1_test_1-aa.jpg"
-        ],
-        
-        "b" => [
-          "/Users/lar/Sites/myfdb_utilities/spec/fixtures/magazines/2_test_0-b.jpg",
-          "/Users/lar/Sites/myfdb_utilities/spec/fixtures/magazines/2_test_1-b.jpg"
-        ],
-      
-        "bb" => [
-          "/Users/lar/Sites/myfdb_utilities/spec/fixtures/magazines/3_test_0-bb.jpg",
-          "/Users/lar/Sites/myfdb_utilities/spec/fixtures/magazines/3_test_1-bb.jpg"
-        ],
-
-        "bbb" => [
-          "/Users/lar/Sites/myfdb_utilities/spec/fixtures/magazines/4_test_0-bbb.jpg",
-          "/Users/lar/Sites/myfdb_utilities/spec/fixtures/magazines/4_test_1-bbb.jpg"
-        ]
+        "a" => ["#{directory}/0_test_0-a.jpg", "#{directory}/0_test_1-a.jpg"],
+        "aa" => ["#{directory}/1_test_0-aa.jpg", "#{directory}/1_test_1-aa.jpg"],
+        "b" => ["#{directory}/2_test_0-b.jpg", "#{directory}/2_test_1-b.jpg"],
+        "bb" => ["#{directory}/3_test_0-bb.jpg", "#{directory}/3_test_1-bb.jpg"],
+        "bbb" => ["#{directory}/4_test_0-bbb.jpg", "#{directory}/4_test_1-bbb.jpg", "#{directory}/4_test_2-bbb.jpg" ]
       }
-    }
+    end
 
     it 'groups images appended by alphabet into a hash' do
+      create_images
       create_join_images
       test_processor.join_groups.should eql(expected) 
     end
@@ -95,10 +77,48 @@ describe Processors::Images do
       test_processor.join_groups.should eql({})
     end
   end
+
+  context '#join' do
+    before do
+      create_join_images
+      test_processor.send(:join)
+    end
+
+    it 'merges related images into one image' do
+      images = Dir.glob(File.join directory, '*')
+      images.should have(5).images
+    end
+
+    it 'deletes the original images after merging complete' do
+      images = Dir.glob(File.join directory, '*')
+      images.each do |image|
+        image.should match(/_joined.jpg/)
+      end
+    end
+  end
+
+  describe '#upload' do
+    context 'error' do
+      before do
+        %x(touch #{directory}/test.jpg)
+        Net::HTTP.
+          expects(:start).
+          at_least_once.
+          with('test.com', 80).
+          raises(NoMethodError, 'General error')
+        test_processor.send(:upload)
+      end
+      
+      it 'connection error' do
+        test_processor.errors.first.should eql("Error creating tear sheet 'test.jpg', error: NoMethodError, message: General error")
+      end
+    end
+  end
+
 end
 
 def directory
-  File.expand_path('../../../fixtures/magazines', __FILE__)
+  fixtures_directory + '/images'
 end
 
 def create_images
@@ -108,11 +128,7 @@ def create_images
 end
 
 def create_join_images
-  2.times do |n|
-    %w(a aa b bb bbb).each_with_index do |letters, i|
-      %x(touch #{directory}/#{i}_test_#{n}-#{letters}.jpg)
-    end 
-  end
+  FileUtils.cp_r Dir.glob("#{fixtures_directory}/join_images/*"), directory
 end
 
 def delete_images
