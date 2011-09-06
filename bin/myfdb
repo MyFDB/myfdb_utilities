@@ -22,7 +22,6 @@ command :process_magazines do |c|
   c.action do |args, options|
     parse_options(options)
     if %x(ps ux | awk '/#{options.host}/ && !/#{Process.ppid}/ && !/#{Process.pid}/ && !/awk/ {print $2}').empty?
-    sleep 1000
       options.default \
         :directory => set_directory(options.host),
         :username => ENV['MYFDB_PROCESS_MAG_USERNAME'],
