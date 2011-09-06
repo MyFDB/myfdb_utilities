@@ -1,4 +1,5 @@
 require 'net/http/post/multipart'
+require 'fileutils'
 require 'rmagick'
 
 module Processors

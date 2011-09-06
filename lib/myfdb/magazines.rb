@@ -1,4 +1,3 @@
-require 'fileutils'
 require 'myfdb/issue'
 
 module Myfdb
@@ -16,6 +15,8 @@ module Myfdb
 
       process_errors issues
     end
+
+    private
 
     def self.process_errors(issues)
       issues.each do |issue|
