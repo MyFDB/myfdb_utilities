@@ -2,12 +2,13 @@ require 'net/http/post/multipart'
 require 'rmagick'
 
 module Processors
-  # Included class must define:
-  #   #directory (points to the parent directory housing the image directories)
-  #   #uri (uri to the upload server)
-  #   #id (id of the associated issue)
-  #
   module Images
+    
+    def self.included(base)
+      base.class_eval do
+        attr_reader :directory, :id
+      end
+    end
   
     def images?
       !images.empty?
@@ -18,14 +19,14 @@ module Processors
     end
 
     def process_images
-      collect_join_groups && join && upload if id
+      join && upload if id
+    end
+
+    def join_groups
+      @join_groups ||= group_images_to_join
     end
 
     private
-
-    def join_groups
-      @join_groups ||= {}
-    end
 
     def join
       join_groups.each_value do |images|
@@ -38,10 +39,11 @@ module Processors
       end
     end
 
-    def collect_join_groups
+    def group_images_to_join(join_groups={})
       images = Dir.glob(File.join directory, '*-[a-z]*\.{jpeg,JPEG,jpg,JPG}')
+      puts images.inspect
       ('a'..'z').each do |letter|
-        images.delete_if do |image|
+        images.each do |image|
           (1..9).each do |n|
             if File.basename(image) =~ /-(#{letter}{#{n}})\./
               key = letter * n
@@ -51,6 +53,7 @@ module Processors
           end
         end
       end
+      join_groups
     end
 
     def upload

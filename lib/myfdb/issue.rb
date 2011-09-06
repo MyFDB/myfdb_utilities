@@ -34,10 +34,10 @@ module Myfdb
         end
         id
       else
-        errors << "Unknown response, body: #{response.body}, code: #{response.code}" and return nil
+        "Unknown response, body: #{response.body}, code: #{response.code}"
       end
     rescue => error
-      errors << "Error creating issue, error: #{error.class}, message: #{error.message}" and return nil
+      "Error creating issue, error: #{error.class}, message: #{error.message}"
     end
 
   end
