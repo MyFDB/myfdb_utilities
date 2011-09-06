@@ -59,10 +59,10 @@ describe Processors::Images do
   context '#join_groups' do
     let(:expected) do 
       {
-        "a" => ["#{directory}/0_test_0-a.jpg", "#{directory}/0_test_1-a.jpg"],
-        "aa" => ["#{directory}/1_test_0-aa.jpg", "#{directory}/1_test_1-aa.jpg"],
-        "b" => ["#{directory}/2_test_0-b.jpg", "#{directory}/2_test_1-b.jpg"],
-        "bb" => ["#{directory}/3_test_0-bb.jpg", "#{directory}/3_test_1-bb.jpg"],
+        "a"   => ["#{directory}/0_test_0-a.jpg", "#{directory}/0_test_1-a.jpg"],
+        "aa"  => ["#{directory}/1_test_0-aa.jpg", "#{directory}/1_test_1-aa.jpg"],
+        "b"   => ["#{directory}/2_test_0-b.jpg", "#{directory}/2_test_1-b.jpg"],
+        "bb"  => ["#{directory}/3_test_0-bb.jpg", "#{directory}/3_test_1-bb.jpg"],
         "bbb" => ["#{directory}/4_test_0-bbb.jpg", "#{directory}/4_test_1-bbb.jpg", "#{directory}/4_test_2-bbb.jpg" ]
       }
     end
