@@ -4,35 +4,50 @@ lib = File.expand_path(File.dirname(__FILE__) + '/../lib')
 $LOAD_PATH.unshift(lib) if File.directory?(lib) && !$LOAD_PATH.include?(lib)
 
 require 'myfdb'
+require 'fileutils'
+require 'cronedit'
 require 'version'
 require 'commander/import'
 require 'command/helpers'
+require 'command/settings'
 
 include Command::Helpers
 
+program :name, 'MyFDB Utilities'
 program :version, Myfdb::VERSION
 program :description, 'Misc tasks related to myfdb.com'
 
-command :process_magazines do |c|
-  c.syntax = 'myfdb process_magazines [options]'
-  c.description = 'Porcesses magazines by creates issues and uploading tear_sheet images'
-
-  c.option '--host HOSTNAME', 'Hostname of the server'
-  c.option '-d', '--base_directory PATH_TO_FOLDER', 'Default HOME'
-  c.option '-u', '--username USERNAME', 'Basic authentication username'
-  c.option '-p', '--password PASSWORD', 'Basic authentication password'
+command :init do |c|
+  c.syntax = 'myfdb init'
+  c.description = 'Set up api key, folders and crontask for myfdb'
 
   c.action do |args, options|
+    settings = ask('API Key: ') + '|'
+    settings << ask('API Secret: ') + '|'
+    settings << ask('Domain: ') { |q| q.default = "www.myfdb.com" }
 
-    parse_options(options)
-    options.default \
-      :directory => set_directory(options.host),
-      :username => ENV['MYFDB_PROCESS_MAG_USERNAME'],
-      :password => ENV['MYFDB_PROCESS_MAG_PASSWORD']
+    File.open(settings_file, "w") {|f| f.write(settings) }
 
-    create_directory?(options.directory)
+    unless File.exists?(main_directory)
+      FileUtils.mkdir main_directory
+      say "A directory has been created in #{main_directory}"
+    end
 
-    Myfdb::Magazines.process(options) if process_not_running?(options.host)
+    if agree('Install cron task for processing (yes/no)?')
+      CronEdit::Crontab.Add  \
+        'myfdb',
+        :minute => 1,
+        :command => "myfdb upload_images >> #{main_directory}/error.log"
+    end
+  end
+end
+
+command :upload_images do |c|
+  c.syntax = 'myfdb upload_images'
+  c.description = 'Upload images directly to My Fashion Database'
+
+  c.action do |args, options|
+    Myfdb::Uploader.process(settings) unless process_running?('upload_images')
   end
 end
 
