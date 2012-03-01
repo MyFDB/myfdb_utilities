@@ -5,7 +5,7 @@ $:.unshift lib unless $:.include?(lib)
 require 'version'
 
 Gem::Specification.new do |s|
-  s.name        = "myfdb"
+  s.name        = "myfdb_utilities"
   s.version     = Myfdb::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ['Larry Sprock']
