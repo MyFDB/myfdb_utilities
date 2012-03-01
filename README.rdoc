@@ -2,31 +2,13 @@
 
 == Installation as a gem:
   
-  git clone git@github.com:MyFDB/myfdb_utilities.git
-  cd myfdb_utilities
-  gem build myfdb_utilities.gemspec
-  gem install myfdb_utilities-x.x.x.gem
+  gem install 'myfdb'
 
-== Run specs:
-  
-  git clone git@github.com:MyFDB/myfdb_utilities.git
-  cd myfdb_utilities
-  bundle install (gem install bundler if necessary)
-  rake
-  
-== Issues Uploader Requirements
+== Settings
 
-Must have ImageMagick installed
+Run `myfdb init`
 
-If you set the following env variables: 
+You will be asked for your api_key and api_secret and if you want a cron task created.
+The cron task will allow you to drop a folder in the main directory and have the upload happen automatically
 
-  ENV['MYFDB_PROCESS_MAG_USERNAME']
-  ENV['MYFDB_PROCESS_MAG_PASSWORD']
-
-password and username are not required and you can do the following in a cron script.
-
-  myfdb process_magazines --host myfdb-production.herokuapp.com
-
-Otherwise use the following:
-
-  myfdb process_magazines --host myfdb-production.herokuapp.com -u <username> -p <password>
+If you choose to install the cron task, your done. To upload images, place a folder of images in ~/MyFDB_Uploads.
