@@ -1,7 +1,7 @@
 require 'spec_helper'
-require 'myfdb/issue'
+require 'myfdb/batch'
 
-describe Myfdb::Issue do
+describe Myfdb::Batch do
   describe '.upload' do
     before(:each) do
       @from_directory = FIXTURES
