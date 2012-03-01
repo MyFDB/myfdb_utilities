@@ -37,7 +37,7 @@ command :init do |c|
       CronEdit::Crontab.Add  \
         'myfdb',
         :minute => 1,
-        :command => "myfdb upload_images >> #{main_directory}/error.log"
+        :command => "#{File.expand_path(File.dirname(__FILE__))}/myfdb upload_images >> #{main_directory}/error.log"
     end
   end
 end
