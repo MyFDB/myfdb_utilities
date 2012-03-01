@@ -1,3 +1,3 @@
 module Myfdb 
-  autoload :Magazines, 'myfdb/magazines'
+  autoload :Uploader, 'myfdb/uploader'
 end

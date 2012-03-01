@@ -1,10 +1,10 @@
-require 'myfdb/processors/images'
+require 'myfdb/batch/images'
 
 module Myfdb
-  class Issue
-    include Processors::Images
+  class Batch
+    include ::Batch::Images
     
-    attr_reader :id, :directory, :uri, :errors
+    attr_reader :directory, :uri, :errors
 
     def initialize(directory, uri)
       @directory = directory
@@ -12,24 +12,24 @@ module Myfdb
       @uri = uri
     end
 
-    def save
-      retrieve_id && process_images if images?
+    def store!
+      id && process_images if images?
+    end
+
+    def id
+      @id ||= File.read(File.join directory, 'issue_id')
+    rescue Errno::ENOENT
+      response = create_issue
+      response.is_a?(Integer) ? @id = response : errors << response 
     end
 
     private
 
-    def retrieve_id
-      @id = File.read(File.join directory, 'issue_id')
-    rescue Errno::ENOENT
-      response = create_issue(directory)
-      response.is_a?(Integer) ? @id = response : errors << response 
-    end
-
-    def create_issue(dir)
+    def create_issue
       response = Net::HTTP.post_form(self.uri + '/upload/issues', {})
       if response.code == '200'
         id = response.body.to_i
-        File.open(File.join(dir, 'issue_id'), 'w') do |f|
+        File.open(File.join(directory, 'issue_id'), 'w') do |f|
           f.print id
         end
         id

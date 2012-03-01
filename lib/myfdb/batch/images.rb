@@ -1,8 +1,6 @@
 require 'net/http/post/multipart'
-require 'fileutils'
-require 'rmagick'
 
-module Processors
+module Batch
   module Images
 
     def self.included(base)
@@ -24,41 +22,10 @@ module Processors
     end
 
     def process_images
-      join && upload if id
-    end
-
-    def join_groups
-      @join_groups ||= group_images_to_join
+      upload if id
     end
 
     private
-
-    def join
-      join_groups.each_value do |images|
-        image = Magick::ImageList.new *images
-        joined_image_path = images[0].gsub(/-[a-z]*\.(?i)JPE?G/, '_joined.jpg')
-
-        if image.append(false).write(joined_image_path)
-          images.each { |image| delete(image) }
-        end
-      end
-    end
-
-    def group_images_to_join(join_groups={})
-      images = Dir.glob(File.join directory, '*-[a-z]*\.{jpeg,JPEG,jpg,JPG}')
-      ('a'..'z').each do |letter|
-        images.each do |image|
-          (1..9).each do |n|
-            if File.basename(image) =~ /-(#{letter}{#{n}})\./
-              key = letter * n
-              join_groups[key] = [] unless join_groups[key]
-              join_groups[key] << image
-            end
-          end
-        end
-      end
-      join_groups
-    end
 
     def upload
       images.each do |image|
