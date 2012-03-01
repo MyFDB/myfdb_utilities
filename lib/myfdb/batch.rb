@@ -26,7 +26,13 @@ module Myfdb
     private
 
     def create_issue
-      response = Net::HTTP.post_form(self.uri + '/upload/issues', {})
+      req = Net::HTTP::Post.new('/upload/issues')
+      req.add_field 'User-Agent', 'MyFDB API 1.0'
+      req.form_data = {}
+      req.basic_auth uri.user, uri.password
+
+      response = Net::HTTP.new(uri.host, uri.port).start { |http| http.request(req) }
+
       if response.code == '200'
         id = response.body.to_i
         File.open(File.join(directory, 'issue_id'), 'w') do |f|
