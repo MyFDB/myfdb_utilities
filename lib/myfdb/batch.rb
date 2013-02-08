@@ -3,7 +3,7 @@ require 'myfdb/batch/images'
 module Myfdb
   class Batch
     include ::Batch::Images
-    
+
     attr_reader :directory, :uri, :errors
 
     def initialize(directory, uri)
@@ -20,7 +20,7 @@ module Myfdb
       @id ||= File.read(File.join directory, 'issue_id')
     rescue Errno::ENOENT
       response = create_issue
-      response.is_a?(Integer) ? @id = response : errors << response 
+      response.is_a?(Integer) ? @id = response : errors << response
     end
 
     private

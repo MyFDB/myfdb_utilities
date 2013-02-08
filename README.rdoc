@@ -2,9 +2,10 @@
 
 == Installation as a gem:
 
-  gem install 'myfdb'
+  gem sources -a https://KEgrKsngksz8pfWoSbeM@gem.fury.io/me/
+  gem install myfdb
 
-== Installation as a gem from github:
+or:
 
   git clone git@github.com:MyFDB/myfdb_utilities.git
   cd myfdb_utilities
@@ -13,15 +14,15 @@
 
 == Settings
 
-Run myfdb_utilities/bin/myfdb init
+Run `myfdb init`
 
 You will be asked for your api_key, api_secret, host (www.myfdb.com if you're installing for use uploading to the live site), and whether you want a cron task created. (The api_key and api_secret can be found in the main MyFDB repository in app/controllers/upload/application_controller.rb, or you can email myfdb@9mmedia.com with any questions.)
 
 The cron task will allow you to drop a folder in the main directory and have the upload happen automatically
 
-If you choose to install the cron task, you're done. To upload images, place a folder of images in ~/MyFDB_Uploads.
+If you choose to install the cron task, you're done. To upload images, just place a folder of images in ~/MyFDB_Uploads.
 
-If you do NOT choose to install the cron task, you can upload the images in ~/MyFDB_Uploads by running myfdb_utilities/bin/myfdb upload_images .
+If you do NOT choose to install the cron task, you can upload the images in ~/MyFDB_Uploads by running `myfdb upload_images` .
 
 Images are automatically deleted once they have been successfully uploaded. (The folders themselves are not deleted, however. Nor are images that failed to upload deleted.)
 
@@ -29,4 +30,4 @@ Each folder is uploaded as a separate, newly created issue. If you want to uploa
 
 Once the images are uploaded, you can find them on the site by going into the admin menu (the arrow next to your name at the top right of the screen) and clicking on 'Title pending issues'. The new issues are marked 'unpublished' and won't show up live on the site until you officially 'publish' them.
 
-To organize the images in a new, unpublished issue in the 'Title pending issues', click on 'edit' and fill in info on the issue. Hit the button at the bottom, and it will publish the issue and take you to a drag-n-drop screen where you can move the images into cover/campaign/editorial buckets. As you drag each image into the correct bucket, a modal window will open and prompt you to fill in the necessary info.
+To organize the images in a new, unpublished issue: In the 'Title pending issues' admin screen, click on 'edit' and fill in info on the issue. Hit the button at the bottom, and it will publish the issue and take you to a drag-n-drop screen where you can move the images into cover/campaign/editorial buckets. As you drag each image into the correct bucket, a modal window will open and prompt you to fill in the necessary info.
