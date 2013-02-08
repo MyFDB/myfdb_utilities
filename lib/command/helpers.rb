@@ -5,7 +5,7 @@ module Command
     end
 
     def settings_file
-      settings.file
+      Settings::FILE
     end
 
     def main_directory

@@ -1,4 +1,6 @@
 class Settings
+  FILE = "#{ENV['HOME']}/.myfdb"
+
   attr_reader :key, :secret, :host
 
   def initialize
@@ -9,14 +11,10 @@ class Settings
     File.join home_directory, 'MyFDB_Uploads'
   end
 
-  def file
-    "#{ENV['HOME']}/.myfdb"
+  def parse_settings
+    File.read(Settings::FILE).split('|')
   end
 
-  def parse_settings
-    File.read(file).split('|')
-  end
-  
   def home_directory
     running_on_windows? ? ENV['USERPROFILE'] : ENV['HOME']
   end
