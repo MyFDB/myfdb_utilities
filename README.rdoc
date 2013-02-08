@@ -1,14 +1,23 @@
 = Myfdb Utilities
 
 == Installation as a gem:
-  
+
   gem install 'myfdb'
+
+== Installation as a gem from github:
+
+  git clone git@github.com:MyFDB/myfdb_utilities.git
+  cd myfdb_utilities
+  gem build myfdb_utilities.gemspec
+  gem install myfdb_utilities-0.0.4.gem
 
 == Settings
 
 Run `myfdb init`
 
-You will be asked for your api_key and api_secret and if you want a cron task created.
+You will be asked for your api_key, api_secret, host (www.myfdb.com if you're installing for use uploading to the live site), and whether you want a cron task created. (The api_key and api_secret can be found in the main MyFDB repository in app/controllers/upload/application_controller.rb, or you can email myfdb@9mmedia.com with any questions.)
+
 The cron task will allow you to drop a folder in the main directory and have the upload happen automatically
 
 If you choose to install the cron task, your done. To upload images, place a folder of images in ~/MyFDB_Uploads.
+
