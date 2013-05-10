@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.name        = "myfdb_utilities"
   s.version     = Myfdb::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ['Larry Sprock']
+  s.authors     = ['Javier Julio', 'Danielle Sucher']
   s.email       = ['development@myfdb.com']
   s.homepage    = "http://rubygems.org/gems/myfdb_utilities"
   s.summary     = "Utilities gem for myfdb"
