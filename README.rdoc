@@ -1,11 +1,11 @@
 = Myfdb Utilities
 
-== Installation as a gem:
+== User Installation for uploading
 
-  gem sources -a https://KEgrKsngksz8pfWoSbeM@gem.fury.io/me/
-  gem install myfdb
+* Download and install OSX Command Line Tools from https://developer.apple.com/downloads/ (requires Apple account)
+* Run uploader_setup script
 
-or:
+== Developer Installation
 
   git clone git@github.com:MyFDB/myfdb_utilities.git
   cd myfdb_utilities
