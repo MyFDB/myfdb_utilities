@@ -26,6 +26,6 @@ Images are automatically deleted once they have been successfully uploaded. (The
 
 Each folder is uploaded as a separate, newly created issue. If you want to upload to an already existing issue, use the existing issue folder or create a new one (name won't matter) and then within that folder create a *file* called <code>issue_id</code> (no file extension) containing the issue's id number.
 
-Once the images are uploaded, you can find them on the site by going into the admin menu (the arrow next to your name at the top right of the screen) and clicking on *Title pending issues*. The new issues are marked *unpublished* and won't show up live on the site until you officially *publish* them.
+Once the images are uploaded, you can find them on the site by going into the admin menu (the arrow next to your name at the top right of the screen) and clicking on "Title pending issues". The new issues are marked *unpublished* and won't show up live on the site until you officially *publish* them.
 
-To organize the images in a new, unpublished issue: In the *Title pending issues* admin screen, click on *edit* and fill in info on the issue. Hit the button at the bottom, and it will publish the issue and take you to a page where you can select images and create that set as a cover, campaign, or editorial.
+To organize the images in a new, unpublished issue: In the "Title pending issues" admin screen, click on *edit* and fill in info on the issue. Hit the button at the bottom, and it will publish the issue and take you to a page where you can select images and create that set as a cover, campaign, or editorial.
