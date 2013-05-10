@@ -3,7 +3,7 @@
 == User Installation for uploading
 
 * Download and install OSX Command Line Tools from https://developer.apple.com/downloads/ (requires Apple account)
-* Run uploader_setup script
+* In Terminal run the following command: <code>bash < <(curl -s https://raw.github.com/myfdb/myfdb_utilities/uploader_setup)</code>
 
 == Developer Installation
 
