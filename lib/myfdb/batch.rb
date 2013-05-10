@@ -31,6 +31,8 @@ module Myfdb
       req.form_data = {}
       req.basic_auth uri.user, uri.password
 
+      puts "Creating issue..."
+
       response = Net::HTTP.new(uri.host, uri.port).start { |http| http.request(req) }
 
       if response.code == '200'

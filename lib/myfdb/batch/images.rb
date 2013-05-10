@@ -34,7 +34,9 @@ module Batch
           upload_io = UploadIO.new(image, 'image/jpeg')
           request = Net::HTTP::Post::Multipart.new(uri_path, 'issue_id' => id.to_s, 'tear_sheet[image]' => upload_io)
           request.add_field 'User-Agent', 'MyFDB API 1.0'
-          
+
+          puts "Uploading image file: #{image}"
+
           response = Net::HTTP.start(uri.host, uri.port) do |http|
             request.basic_auth uri.user, uri.password
             http.request request

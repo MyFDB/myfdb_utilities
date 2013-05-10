@@ -8,6 +8,7 @@ module Myfdb
       batches = []
 
       Dir.glob("#{options.directory}/*") do |directory|
+        puts "Being processing images in: #{File.basename(directory)}"
         batch = Myfdb::Batch.new(directory, uri)
         batch.store! 
         batches << batch
