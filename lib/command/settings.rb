@@ -1,7 +1,7 @@
 class Settings
   FILE = "#{ENV['HOME']}/.myfdb"
 
-  attr_reader :key, :secret, :host
+  attr_reader :key, :secret, :host, :protocol
 
   def initialize
     @key, @secret, @host = parse_settings
