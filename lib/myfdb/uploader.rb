@@ -4,7 +4,7 @@ module Myfdb
   module Uploader
   
     def self.process(options)
-      uri = URI.parse "http://#{options.key}:#{options.secret}@#{options.host}"
+      uri = URI.parse "#{options.protocol}://#{options.key}:#{options.secret}@#{options.host}"
       batches = []
 
       Dir.glob("#{options.directory}/*") do |directory|

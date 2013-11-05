@@ -16,11 +16,11 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = ">= 1.3.6"
 
-  s.add_development_dependency "rspec", ["~> 2.6.0"]
+  s.add_development_dependency "rspec", ["~> 2.0"]
   s.add_development_dependency "mocha", ["~> 0.9"]
   s.add_development_dependency "fakeweb"
   s.add_development_dependency "rake"
-  
+
   s.add_dependency 'multipart-post'
   s.add_dependency 'commander'
   s.add_dependency 'cronedit'
