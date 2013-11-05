@@ -33,7 +33,7 @@ module Myfdb
 
       puts "Creating issue..."
 
-      response = Net::HTTP.new(uri.host, uri.port).start { |http| http.request(req) }
+      response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') { |http| http.request(req) }
 
       if response.code == '200'
         id = response.body.to_i

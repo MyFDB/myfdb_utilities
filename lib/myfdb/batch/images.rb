@@ -37,7 +37,7 @@ module Batch
 
           puts "Uploading image file: #{image}"
 
-          response = Net::HTTP.start(uri.host, uri.port) do |http|
+          response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
             request.basic_auth uri.user, uri.password
             http.request request
           end
