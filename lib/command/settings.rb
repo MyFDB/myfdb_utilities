@@ -4,7 +4,7 @@ class Settings
   attr_reader :key, :secret, :host, :protocol
 
   def initialize
-    @key, @secret, @host = parse_settings
+    @key, @secret, @host, @protocol = parse_settings
   end
 
   def directory
