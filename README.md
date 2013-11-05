@@ -9,10 +9,10 @@
 
 ## Developer Installation
 
-  git clone git@github.com:MyFDB/myfdb_utilities.git
-  cd myfdb_utilities
-  gem build myfdb_utilities.gemspec
-  gem install myfdb_utilities-0.0.7.gem
+    git clone git@github.com:MyFDB/myfdb_utilities.git
+    cd myfdb_utilities
+    gem build myfdb_utilities.gemspec
+    gem install myfdb_utilities-0.0.7.gem
 
 ## Settings
 
